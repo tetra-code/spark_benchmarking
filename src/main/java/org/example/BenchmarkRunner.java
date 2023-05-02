@@ -11,8 +11,8 @@ public class BenchmarkRunner {
     public static void main(String[] args) throws Exception {
         Options options = new OptionsBuilder()
                 .include(SparkSQLBenchmark.class.getSimpleName())
-//                .addProfiler(StackProfiler.class)
-//                .addProfiler(GCProfiler.class)
+                .addProfiler(StackProfiler.class)
+                .addProfiler(GCProfiler.class)
                 .forks(1)
                 .build();
         new Runner(options).run();

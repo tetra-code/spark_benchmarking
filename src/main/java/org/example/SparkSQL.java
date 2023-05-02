@@ -1,5 +1,6 @@
 package org.example;
 
+import ch.cern.sparkmeasure.StageMetrics;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -99,13 +100,24 @@ public class SparkSQL {
                 .collect(Collectors.joining(" "));
     }
 
-    public static void executeQueries(SparkSession spark, int x) {
+    public static void pluginExecuteQueries(StageMetrics stageMetrics, SparkSession spark, int x) {
         for (int i = 1; i<x; i++) {
             try {
                 String query = getSQLQuery("src/main/resources/sql_files/query" +  i + ".sql");
-                spark.sql(query);
-            } catch (Exception e) {
-//                System.out.println("Query " + i + " failed");
+                stageMetrics.runAndMeasure(() -> spark.sql(query).showString(1, 0, false));
+                System.out.println("Query " + i + " succeeded");
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    public static void coreExecuteQueries(SparkSession spark, int x) {
+        for (int i = 1; i<x; i++) {
+            try {
+                String query = getSQLQuery("src/main/resources/sql_files/query" +  i + ".sql");
+                spark.sql(query).showString(1, 0, false);
+                System.out.println("Query " + i + " succeeded");
+            } catch (Exception ignored) {
             }
         }
     }

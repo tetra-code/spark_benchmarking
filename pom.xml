@@ -24,21 +24,21 @@
             <artifactId>jmh-generator-annprocess</artifactId>
             <version>1.35</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-core -->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.spark</groupId>-->
-<!--            <artifactId>spark-core_2.13</artifactId>-->
-<!--            <version>3.2.2</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.13</artifactId>
             <version>3.2.0</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>ch.cern.sparkmeasure</groupId>-->
-<!--            <artifactId>spark-plugins_2.12</artifactId>-->
-<!--            <version>0.2</version>-->
-<!--        </dependency>-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.spark/spark-core &ndash;&gt;-->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.13</artifactId>
+            <version>3.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.cern.sparkmeasure</groupId>
+            <artifactId>spark-measure_2.13</artifactId>
+            <version>0.22</version>
+        </dependency>
     </dependencies>
 </project>

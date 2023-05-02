@@ -3,18 +3,23 @@ package org.example;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;
 import org.openjdk.jmh.annotations.*;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 import java.util.concurrent.TimeUnit;
 
+import ch.cern.sparkmeasure.StageMetrics;
+
 @State(Scope.Thread)
-@BenchmarkMode(Mode.AverageTime)
+@BenchmarkMode(Mode.All)
 @Fork(value = 1)
-@Warmup(iterations = 5)
-@Measurement(iterations = 10)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@Warmup(iterations = 10)
+@Measurement(iterations = 20)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class SparkSQLBenchmark {
 
     private SparkSession spark;
+    private StageMetrics stageMetrics;
 
     // setup and tear down execution time is not included in the benchmark runtime measurements.
     @Setup
@@ -25,9 +30,14 @@ public class SparkSQLBenchmark {
                 // 1 executor per instance of each worker
                 .set("spark.executor.instances", "1")
                 // 4 cores on each executor
-                .set("spark.executor.cores", "4");
+                .set("spark.executor.cores", "4")
+                .set("log4j.rootCategory=ERROR", "console");
 
         spark = SparkSession.builder().config(conf).getOrCreate();
+
+        stageMetrics = new StageMetrics(spark);
+        Logger.getLogger("org").setLevel(Level.OFF);
+        Logger.getLogger("akka").setLevel(Level.OFF);
 
         String resourcesPath = "src/main/resources/";
         SparkSQL.exportTCPDSData(
@@ -65,12 +75,22 @@ public class SparkSQLBenchmark {
     }
 
     @Benchmark
-    public void runAllQueries() {
-        SparkSQL.executeQueries(spark, 100);
+    public void coreRunAllQueries() {
+        SparkSQL.coreExecuteQueries(spark, 100);
     }
 
-    @Benchmark
-    public void runSubsetQueries() {
-        SparkSQL.executeQueries(spark, 50);
-    }
+//    @Benchmark
+//    public void pluginRunAllQueries() {
+//        SparkSQL.pluginExecuteQueries(stageMetrics, spark, 100);
+//    }
+//
+//    @Benchmark
+//    public void coreRunSubsetQueries() {
+//        SparkSQL.coreExecuteQueries(spark, 50);
+//    }
+//
+//    @Benchmark
+//    public void pluginRunSubsetQueries() {
+//        SparkSQL.pluginExecuteQueries(stageMetrics, spark, 50);
+//    }
 }
