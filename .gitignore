@@ -1,2 +1,4 @@
 .idea
 target
+src/main/resources/sql_files
+src/main/resources/tpcds_data
