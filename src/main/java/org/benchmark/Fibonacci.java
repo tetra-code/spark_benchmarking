@@ -1,4 +1,4 @@
-package org.example;
+package org.benchmark;
 
 public class Fibonacci {
     public static int fibonacciRecursion(int n) {

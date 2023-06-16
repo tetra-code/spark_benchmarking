@@ -1,4 +1,4 @@
-package org.example;
+package org.benchmark;
 
 import org.openjdk.jmh.profile.GCProfiler;
 import org.openjdk.jmh.profile.StackProfiler;

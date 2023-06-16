@@ -1,4 +1,4 @@
-package org.example;
+package org.benchmark;
 
 import ch.cern.sparkmeasure.StageMetrics;
 import org.apache.spark.sql.Dataset;

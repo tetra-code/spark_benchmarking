@@ -1,21 +1,19 @@
-package org.example;
+package org.benchmark;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;
 import org.openjdk.jmh.annotations.*;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
 
 import java.util.concurrent.TimeUnit;
 
 import ch.cern.sparkmeasure.StageMetrics;
 
 @State(Scope.Thread)
-@BenchmarkMode(Mode.All)
+@BenchmarkMode(Mode.AverageTime)
 @Fork(value = 1)
-@Warmup(iterations = 10)
-@Measurement(iterations = 20)
-@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@Warmup(iterations = 1)
+@Measurement(iterations = 1)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class SparkSQLBenchmark {
 
     private SparkSession spark;
@@ -36,8 +34,6 @@ public class SparkSQLBenchmark {
         spark = SparkSession.builder().config(conf).getOrCreate();
 
         stageMetrics = new StageMetrics(spark);
-        Logger.getLogger("org").setLevel(Level.OFF);
-        Logger.getLogger("akka").setLevel(Level.OFF);
 
         String resourcesPath = "src/main/resources/";
         SparkSQL.exportTCPDSData(
@@ -79,18 +75,18 @@ public class SparkSQLBenchmark {
         SparkSQL.coreExecuteQueries(spark, 100);
     }
 
-//    @Benchmark
-//    public void pluginRunAllQueries() {
-//        SparkSQL.pluginExecuteQueries(stageMetrics, spark, 100);
-//    }
-//
-//    @Benchmark
-//    public void coreRunSubsetQueries() {
-//        SparkSQL.coreExecuteQueries(spark, 50);
-//    }
-//
-//    @Benchmark
-//    public void pluginRunSubsetQueries() {
-//        SparkSQL.pluginExecuteQueries(stageMetrics, spark, 50);
-//    }
+    @Benchmark
+    public void pluginRunAllQueries() {
+        SparkSQL.pluginExecuteQueries(stageMetrics, spark, 100);
+    }
+
+    @Benchmark
+    public void coreRunSubsetQueries() {
+        SparkSQL.coreExecuteQueries(spark, 50);
+    }
+
+    @Benchmark
+    public void pluginRunSubsetQueries() {
+        SparkSQL.pluginExecuteQueries(stageMetrics, spark, 50);
+    }
 }

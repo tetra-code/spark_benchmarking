@@ -1,4 +1,4 @@
-package org.example;
+package org.benchmark;
 
 public class StringConcatenation {
     public static String simpleAppend(String s, int times){
